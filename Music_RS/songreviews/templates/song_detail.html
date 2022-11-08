@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ song.title }}</h2>
+<h5>{{ song.review_set.count }} reviews ({{ song.average_rating | floatformat }} average rating)</h5>
+
+<h3>Recent reviews</h3>
+
+{% if song.review_set.all %}
+<div>
+    {% for review in song.review_set.all %}
+    <div>
+        <em>{{ review.comment }}</em>
+        <h6>Rated {{ review.rating }} of 5 by {{ review.user_name }}</h6>
+        <h5><a href="{% url 'review_detail' review.id %}">
+            Read more
+        </a></h5>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No reviews for this song yet</p>
+{% endif %}
+
+<h3>Add your review</h3>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'add_review' song.id %}" method = "post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = "submit" value = "Add" />
+</form>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
